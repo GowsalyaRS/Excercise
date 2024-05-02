@@ -15,7 +15,7 @@ public class App
        while(true)
        {
            System.out.println("======================================");
-           System.out.println("1. add access lift to user \n2.use lift ");
+           System.out.println("1.add access lift to user \n2.use lift  \n3.cleaning process \n4.Exit");
            System.out.println("======================================");
            System.out.println("Enter the number");
            int choose = scan.nextInt();
@@ -23,6 +23,8 @@ public class App
            {
               case 1: accessLift.addAccesslift();break;
               case 2: accessLift.travelLift();break;
+              case 3: accessLift.cleaning();break; 
+              case 4: return;
               default : System.out.println(" Oops...! enter the correct option ");
            }
         }

@@ -56,6 +56,7 @@ public class AccessLift
         System.out.println("provide access in lift Successfully....!");
         System.out.println("Your access Id  : " + user.getUserId()); 
     }
+
     public void travelLift() 
     {
         System.out.println("Enter the access Id ");
@@ -70,11 +71,12 @@ public class AccessLift
         }
         System.out.println("oops!...access id is Invalid "); 
     }
-    private void travelLift(User user) 
+
+    private void travelLift(User user)
     {
         System.out.println("Your currect floor ");
         int floorNumber = scan.nextInt();
-        System.out.println("Enter the direction up ");
+        System.out.println("Enter the direction up (true /false)");
         boolean direction = scan.nextBoolean();
         System.out.println("Enter the destination ");
         int destination = scan.nextInt();
@@ -83,27 +85,104 @@ public class AccessLift
         for(int i=0;i<lifts.length;i++)
         {
            Lift elevator =  lifts[i];
-           if(elevator.getAccessPoint().contains(floorNumber) && elevator.getAccessPoint().contains(destination) &&  (elevator.getCurrentCapacity()+1)<elevator.getCapacity() && elevator.isUpDirection()==direction)
+           if(elevator.isCleaning())
            {
-               int floor = Math.abs( elevator.getCurrentFloor()-floorNumber);
-               System.out.println(floor);
-               if(min>floor)
-               {
+              continue;
+           }
+           if(elevator.getAccessPoint().contains(floorNumber) && elevator.getAccessPoint().contains(destination) &&  (elevator.getCurrentCapacity()+1)<elevator.getCapacity()  )
+           {
+              if(direction || !direction)
+              {
+                int floor = Math.abs( elevator.getCurrentFloor()-floorNumber);
+                if(min>floor)
+                {
                    lift = elevator;
                    min = floor;
-               }
+                }
+              }
            }
         }
         if(lift==null)
         {
-            System.out.println("lift is not available pls wait a minutes....");
-            return ;
+            for(int i=0;i<lifts.length;i++)
+            {
+                Lift liftss = lifts[i];
+                if(liftss.isCleaning())
+                {
+                    continue;
+                }
+                if(liftss.getAccessPoint().contains(floorNumber))
+                {
+                    int floor = Math.abs(liftss.getCurrentFloor()-floorNumber);
+                    if(min>floor)
+                    {
+                      lift = liftss;
+                       min = floor;
+                    }
+                }
+            } 
+            System.out.println("Your assigned lift : " + lift.getLiftId()); 
+            lift.setDestination(destination);
+            lift.setCurrentFloor(destination);
+            displayLift();
+            return;
         }
         System.out.println("Your assigned lift : " + lift.getLiftId());
-        displayLift();
-        lift.setCapacity(lift.getCapacity()+1);
-        lift.setCurrentCapacity(lift.getCurrentCapacity()+1);
-        int des =  Math.max (lift.getDestination(),destination);
+        int des =0;
+        if(direction)
+        {
+          lift.setCurrentCapacity(lift.getCurrentCapacity()+1);
+          des =  Math.max (lift.getDestination(),destination); 
+        }
+        else 
+        {
+           des =Math.min(destination,lift.getDestination());
+        }
         lift.setDestination(des);
+        lift.setCurrentFloor(des);
+        displayLift();
     }
+    public void cleaning()
+    {
+        while(true) 
+        {
+            System.out.println("1.start cleaning  \n2.Finished cleaning  \n.exit");
+            int choose = scan.nextInt();
+            switch (choose) 
+            {
+                case 1:stratCleaning();break;
+                case 2:finishedCleaning();break;
+                case 3:return;
+                default : System.out.println(" oops..! enter the correct option ");   
+            }
+        }
+    }
+    public  void finishedCleaning() 
+    {
+        System.out.println("Enter the lift number"); 
+        int liftNumber = scan.nextInt();
+        if(liftNumber <=liftNumber)
+        {
+           lifts [liftNumber-1].setCleaning(false);
+           System.out.println("Finished cleaning lift");
+        }
+        else{
+            System.out.println("This is lift invalid");
+        }
+    }
+    public void stratCleaning() 
+    {
+        System.out.println("Enter the cleaning left number ");
+        int liftNumber = scan.nextInt();
+        if(liftNumber<=lifts.length )
+        {
+            lifts [liftNumber-1].setCleaning(true);
+            System.out.println("Cleaning  lift  added successfully");
+        }
+        else
+        {
+            System.out.println("This is lift invalid");
+        }
+    }
+
 }

@@ -3,13 +3,20 @@ public class Lift
 {
     private int liftId;
     private static int count=1;
-    private   ArrayList <User> users = new ArrayList() ;
+    private  ArrayList <User> users = new ArrayList() ;
     private int currentFloor;
     private int destination;
     private ArrayList <Integer> accessPoint = new ArrayList <>();
     private boolean upDirection;
     private int capacity;
     private int currentCapacity;
+    private boolean cleaning;
+    public boolean isCleaning() {
+        return cleaning;
+    }
+    public void setCleaning(boolean cleaning) {
+        this.cleaning = cleaning;
+    }
     Lift (int capacity)
     {
         liftId = count++;
